@@ -46,15 +46,21 @@ class Net2GridController extends AbstractController
         // $content = '{"gatewayEui":84df0c0078479200, "profileId":"0x0104", ...}'
         $message = $response->getContent();
 
-        // data that were captured in array format
-        // $content = ['gatewayEui' => 84df0c0078479200, 'profileId' => '0x0104', ...]
-        $content = $response->toArray();
+        // we convert the message from JSON format to array format
+        $arr = json_decode($message, true);
 
         // we define the routing key, which consists of 5 fields
-        $routingKey = $content['gatewayEui'].'.'.$content['profileId'].'.'.$content['endpointId'].'.'.$content['clusterId'].'.'.$content['attributeId'];
+        // we are using the decimal representation for gatewayEui, profileId, endpointId, clusterId, attributeId
+        $x = hexdec($arr['gatewayEui']);
+        //we use sprintf to get the large number without scientific notation
+        $gatewayEui = sprintf("%.0f",$x);
+
+
+        $routingKey = $gatewayEui.'.'.hexdec($arr['profileId']).'.'.hexdec($arr['endpointId']).'.'.hexdec($arr['clusterId']).'.'.hexdec($arr['attributeId']);
+
 
         // we load 'autoload.php' file
-        require_once  'C:\xampp\htdocs\assignment\vendor\autoload.php';  // You can also try: __DIR__ . '/vendor/autoload.php';
+        require_once  'C:\xampp\htdocs\assignment_n2g\vendor\autoload.php';   // You can also try: __DIR__ . '/vendor/autoload.php';
         
         // we create a new connection by creating a new instance of the AMQPStreamConnection class (host,port,user,password)
         $connection = new AMQPStreamConnection('candidatemq.n2g-dev.net','','candidate','Crs$4tDzX}W_Jh35mp');
@@ -88,19 +94,6 @@ class Net2GridController extends AbstractController
                
     }
 
-
-    /**
-     * @Route("/consume-data", name="consume_data")
-     */
-    public function consumeData()   // consumeData function will consume data from the API and store these in candidate database
-    {
-    	// we execute 'Net2GridConsumer.php' file
-    	include  'C:\xampp\htdocs\assignment\Net2GridConsumer.php'; 
-
-        // printing info
-    	exit('<h5>Data have been consumed from raw_results queue and have been stored in candidate database</h5>');
-
-    }	
    
 
 }

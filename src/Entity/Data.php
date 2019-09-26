@@ -17,27 +17,27 @@ class Data
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="decimal", precision=19, scale=0)
      */
-    private $gatewayEui;
+    private $gatewayeui;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="decimal", precision=19, scale=0)
      */
     private $profileId;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="decimal", precision=19, scale=0)
      */
     private $endpointId;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="decimal", precision=19, scale=0)
      */
     private $clusterId;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="decimal", precision=19, scale=0)
      */
     private $attributeId;
 
@@ -56,14 +56,14 @@ class Data
         return $this->id;
     }
 
-    public function getGatewayEui(): ?string
+    public function getGatewayeui(): ?string
     {
-        return $this->gatewayEui;
+        return $this->gatewayeui;
     }
 
-    public function setGatewayEui(string $gatewayEui): self
+    public function setGatewayeui(string $gatewayeui): self
     {
-        $this->gatewayEui = $gatewayEui;
+        $this->gatewayeui = $gatewayeui;
 
         return $this;
     }

@@ -5,7 +5,7 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Connection\AMQPConnection;
 
 // we load 'autoload.php' file
-require_once  'C:\xampp\htdocs\assignment\vendor\autoload.php';  // You can also try: __DIR__ . '/vendor/autoload.php';
+require_once  'C:\xampp\htdocs\assignment_n2g\vendor\autoload.php';   // You can also try: __DIR__ . '/vendor/autoload.php';
 
 // we create a function which is used to process the message that was sent from the publisher
 $callback = function($msg) {
@@ -14,19 +14,23 @@ $callback = function($msg) {
 	echo 'Message received = ',$msg->body,"\n";	
 
   // we convert the message from JSON format to array format
-	$message = json_decode($msg->body,true);	
+	$arr = json_decode($msg->body,true);	
  
   // we assing variables to each field of the message
-	$gatewayEui = $message['gatewayEui'];
-	$profileId = $message['profileId'];
-	$endpointId = $message['endpointId'];
-	$clusterId = $message['clusterId'];
-	$attributeId = $message['attributeId'];
-	$value = $message['value'];
-	$timestamp = $message['timestamp'];
+  // we are using the decimal representation for gatewayEui, profileId, endpointId, clusterId, attributeId  
+	$x = hexdec($arr['gatewayEui']); 
+  //we use sprintf to get the large number without scientific notation
+  $gatewayEui = sprintf("%.0f",$x); 
+
+  $profileId = hexdec($arr['profileId']); 
+  $endpointId = hexdec($arr['endpointId']);  
+  $clusterId = hexdec($arr['clusterId']);  
+  $attributeId = hexdec($arr['attributeId']); 
+  $value = $arr['value']; 
+  $timestamp = $arr['timestamp']; 
 
 	// we create a connection to the candidate database (host,user,password,database_name)
-    $conn = new mysqli('candidaterds.n2g-dev.net', 'candidate', 'hqRkWQNsJy3TfCKwAh4A8gr', 'candidate');
+  $conn = new mysqli('candidaterds.n2g-dev.net', 'candidate', 'hqRkWQNsJy3TfCKwAh4A8gr', 'candidate');
 
     // we check if the connection is successfully established
     if ($conn->connect_error) {
@@ -55,7 +59,12 @@ $routingKey = function($msg) {
 
    // we convert the message from JSON format to array format
    $arr = json_decode($msg, true);
-   return  $arr['gatewayEui'].'.'.$arr['profileId'].'.'.$arr['endpointId'].'.'.$arr['clusterId'].'.'.$arr['attributeId'];
+
+   // we are using the decimal representation for gatewayEui, profileId, endpointId, clusterId, attributeId
+   $x = hexdec($arr['gatewayEui']); 
+   //we use sprintf to get the large number without scientific notation
+   $gatewayEui = sprintf("%.0f",$x); 
+   return  $gatewayEui.'.'.hexdec($arr['profileId']).'.'.hexdec($arr['endpointId']).'.'.hexdec($arr['clusterId']).'.'.hexdec($arr['attributeId']); 
 };
 
 // we create a new connection by creating a new instance of the AMQPStreamConnection class (host,port,user,password)
