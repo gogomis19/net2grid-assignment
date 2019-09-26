@@ -13,11 +13,11 @@ On the event of clicking the second button, the 'consume_data' Route is loaded, 
 
 **Property Name, Type, Length, Required**
 * id                  integer         255                NOT NULL                 AUTO_INCREMENT  (automatically created)
-* gatewayEui          string          255                NOT NULL
-* profileId           string          255                NOT NULL  
-* endpointId          string          255                NOT NULL
-* clusterId           string          255                NOT NULL
-* attributeId         string          255                NOT NULL
+* gatewayeui          decimal                            NOT NULL
+* profileId           decimal                            NOT NULL  
+* endpointId          decimal                            NOT NULL
+* clusterId           decimal                            NOT NULL
+* attributeId         decimal                            NOT NULL
 * value               integer                            NOT NULL
 * timestamp           integer                            NOT NULL
 
