@@ -63,13 +63,13 @@ class Net2GridController extends AbstractController
         require_once  'C:\xampp\htdocs\assignment_n2g\vendor\autoload.php';   // You can also try: __DIR__ . '/vendor/autoload.php';
         
         // we create a new connection by creating a new instance of the AMQPStreamConnection class (host,port,user,password)
-        $connection = new AMQPStreamConnection('candidatemq.n2g-dev.net','','candidate','Crs$4tDzX}W_Jh35mp');
+        $connection = new AMQPStreamConnection('candidatemq.n2g-dev.net',5672,'candidate','Crs$4tDzX}W_Jh35mp');
 
         // we create a channel
         $channel = $connection->channel();
 
         // we create the reults exchange, which is of type topic
-        $channel->exchange_declare('results', 'topic', false, true, false);
+        $channel->exchange_declare('results', 'topic', false, true, false);        
 
         // we create the message
         $msg = new AMQPMessage($message);

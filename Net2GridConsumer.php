@@ -68,16 +68,13 @@ $routingKey = function($msg) {
 };
 
 // we create a new connection by creating a new instance of the AMQPStreamConnection class (host,port,user,password)
-$connection = new AMQPStreamConnection('candidatemq.n2g-dev.net','','candidate','Crs$4tDzX}W_Jh35mp');
+$connection = new AMQPStreamConnection('candidatemq.n2g-dev.net',5672,'candidate','Crs$4tDzX}W_Jh35mp');
 
 // we create a channel
 $channel = $connection->channel();
 
 // we create the reults exchange, which is of type topic
 $channel->exchange_declare('results', 'topic', false, true, false);
-
-// we create the 'raw_results' queue
-$channel->queue_declare( 'raw_results', false, false, false, false);
 
 // we bind the queue with the exchange
 $channel->queue_bind('raw_results', 'results', '$routingKey');
